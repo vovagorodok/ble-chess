@@ -12,10 +12,10 @@ def main():
     logging.basicConfig(format='%(message)s', level=logging.INFO)
 
     device = chess_device.ChessDevice()
-    protocol = cecp_protocol.CppProtocol(device.send)
-    service_uuid = cecp_protocol.SERVICE_UUID
-    tx_uuid = cecp_protocol.TX_UUID
-    rx_uuid = cecp_protocol.RX_UUID
+    protocol = cpp_protocol.CppProtocol(device.send)
+    service_uuid = cpp_protocol.SERVICE_UUID
+    tx_uuid = cpp_protocol.TX_UUID
+    rx_uuid = cpp_protocol.RX_UUID
 
     device.set_protocol(protocol)
     chess_peripheral = peripheral.Peripheral(__get_adapter_adress(),
