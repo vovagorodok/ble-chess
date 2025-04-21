@@ -24,15 +24,15 @@ class CppProtocol(BaseProtocol):
     def handle_cmd(self, cmd: str):
         if cmd.startswith(Command.FEATURE):
             feature = self.__get_cmd_params(cmd)
-            self.__send_ack(feature in [Feature.LAST_MOVE.value, Feature.CHECK.value, Feature.SIDE.value])
+            self.__send_ack(feature in [Feature.LAST_MOVE, Feature.CHECK, Feature.SIDE])
         elif cmd.startswith(Command.VARIANT):
             variant = self.__get_cmd_params(cmd)
-            self.__send_ack(variant in [Variant.STANDARD.value, Variant.CHESS_960.value])
+            self.__send_ack(variant in [Variant.STANDARD, Variant.CHESS_960])
         elif cmd.startswith(Command.SET_VARIANT):
             variant = self.__get_cmd_params(cmd)
-            if variant == Variant.STANDARD.value:
+            if variant == Variant.STANDARD:
                 self.board.chess960 = False
-            elif variant == Variant.CHESS_960.value:
+            elif variant == Variant.CHESS_960:
                 self.board.chess960 = True
         elif cmd.startswith(Command.BEGIN):
             fen = self.__get_cmd_params(cmd)
@@ -72,11 +72,11 @@ class CppProtocol(BaseProtocol):
             print(f'Check: {chess.square_name(check)}')
         elif cmd.startswith(Command.SIDE):
             side = self.__get_cmd_params(cmd)
-            if side == Side.WHITE.value:
+            if side == Side.WHITE:
                 self.side = chess.WHITE
-            elif side == Side.BLACK.value:
+            elif side == Side.BLACK:
                 self.side = chess.BLACK
-            elif side == Side.BOTH.value:
+            elif side == Side.BOTH:
                 self.side = None
         
     def __on_text_provided(self, text: str):

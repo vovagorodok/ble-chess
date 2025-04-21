@@ -1,6 +1,4 @@
-from enum import Enum
-
-class Feature(Enum):
+class Feature:
     GET_STATE = "get_state"
     SET_STATE = "set_state"
     STATE_STREAM = "state_stream"
@@ -18,7 +16,7 @@ class Feature(Enum):
     DRAW_REASON = "draw_reason"
     VARIANT_REASON = "variant_reason"
 
-class Variant(Enum):
+class Variant:
     STANDARD = "standard"
     CHESS_960 = "chess_960"
     THREE_CHECK = "3_check"
@@ -29,7 +27,7 @@ class Variant(Enum):
     RACING_KINGS = "racing_kings"
     CRAZY_HOUSE = "crazy_house"
 
-class Command(Enum):
+class Command:
     OK = "ok"
     NOK = "nok"
     FEATURE = "feature"
@@ -43,26 +41,26 @@ class Command(Enum):
     END = "end"
     PROMOTE = "promote"
     ERR = "err"
-    GET_STATE = Feature.GET_STATE.value
-    SET_STATE = Feature.SET_STATE.value
+    GET_STATE = Feature.GET_STATE
+    SET_STATE = Feature.SET_STATE
     UNSYNC_SETIBLE = "unsync_setible"
-    LAST_MOVE = Feature.LAST_MOVE.value
-    CHECK = Feature.CHECK.value
-    UNDO = Feature.UNDO.value
-    MOVED = Feature.MOVED.value
-    MSG = Feature.MSG.value
-    RESIGN = Feature.RESIGN.value
-    DRAW_OFFER = Feature.DRAW_OFFER.value
-    SIDE = Feature.SIDE.value
-    TIME = Feature.TIME.value
-    SCORE = Feature.SCORE.value
+    LAST_MOVE = Feature.LAST_MOVE
+    CHECK = Feature.CHECK
+    UNDO = Feature.UNDO
+    MOVED = Feature.MOVED
+    MSG = Feature.MSG
+    RESIGN = Feature.RESIGN
+    DRAW_OFFER = Feature.DRAW_OFFER
+    SIDE = Feature.SIDE
+    TIME = Feature.TIME
+    SCORE = Feature.SCORE
     OPTIONS_BEGIN = "options_begin"
-    OPTION = Feature.OPTION.value
+    OPTION = Feature.OPTION
     OPTIONS_END = "options_end"
     OPTIONS_RESET = "options_reset"
     SET_OPTION = "set_option"
 
-class EndReason(Enum):
+class EndReason:
     UNDEFINED = "undefined"
     CHECKMATE = "checkmate"
     DRAW = "draw"
@@ -70,24 +68,24 @@ class EndReason(Enum):
     RESIGN = "resign"
     ABORT = "abort"
 
-class Side(Enum):
+class Side:
     WHITE = "w"
     BLACK = "b"
     BOTH = "?"
 
-class DrawReason(Enum):
-    DRAW_OFFER = Feature.DRAW_OFFER.value
+class DrawReason:
+    DRAW_OFFER = Feature.DRAW_OFFER
     STALEMATE = "stalemate"
     THREEFOLD_REPETITION = "threefold_repetition"
     FIFTY_MOVE = "fifty_move"
     INSUFFICIENT_MATERIAL = "insufficient_material"
     DEAD_POSITION = "dead_position"
 
-class VariantReason(Enum):
-    THREE_CHECK = Variant.THREE_CHECK.value
-    KING_OF_THE_HILL = Variant.KING_OF_THE_HILL.value
+class VariantReason:
+    THREE_CHECK = Variant.THREE_CHECK
+    KING_OF_THE_HILL = Variant.KING_OF_THE_HILL
 
-class OptionType(Enum):
+class OptionType:
     BOOL = "bool"
     ENUM = "enum"
     STR = "str"
