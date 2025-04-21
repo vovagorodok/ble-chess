@@ -1,0 +1,117 @@
+import typing
+
+import chess
+
+import async_input
+
+from protocol import BaseProtocol
+from string_constants import Command, Feature, Variant, Side
+
+
+SERVICE_UUID = 'f5351050-b2c9-11ec-a0c0-b3bc53b08d33'
+TX_UUID = 'f53513ca-b2c9-11ec-a0c1-639b8957db99'
+RX_UUID = 'f535147e-b2c9-11ec-a0c2-8bbd706ec4e6'
+
+
+class CppProtocol(BaseProtocol):
+
+    def __init__(self, send_callback: typing.Callable):
+        super().__init__(send_callback)
+        self.board = chess.Board()
+        self.last_move = None
+        self.side = None
+
+    def handle_cmd(self, cmd: str):
+        if cmd.startswith(Command.FEATURE):
+            feature = self.__get_cmd_params(cmd)
+            self.__send_ack(feature in [Feature.LAST_MOVE.value, Feature.CHECK.value, Feature.SIDE.value])
+        elif cmd.startswith(Command.VARIANT):
+            variant = self.__get_cmd_params(cmd)
+            self.__send_ack(variant in [Variant.STANDARD.value, Variant.CHESS_960.value])
+        elif cmd.startswith(Command.SET_VARIANT):
+            variant = self.__get_cmd_params(cmd)
+            if variant == Variant.STANDARD.value:
+                self.board.chess960 = False
+            elif variant == Variant.CHESS_960.value:
+                self.board.chess960 = True
+        elif cmd.startswith(Command.BEGIN):
+            fen = self.__get_cmd_params(cmd)
+            self.board.set_fen(fen)
+            self.send(f'{Command.SYNC} {fen}')
+            self.__print_state()
+        elif cmd.startswith(Command.MOVE):
+            move = chess.Move.from_uci(self.__get_cmd_params(cmd))
+            self.board.push(move)
+            self.__print_state()
+            print(f'Last move: {self.board.peek()}')
+        elif cmd.startswith(Command.PROMOTE):
+            move = chess.Move.from_uci(self.__get_cmd_params(cmd))
+            self.board.push(move)
+            self.last_move = None
+            self.__print_state()
+            print(f'Last move: {self.board.peek()}')
+        elif cmd.startswith(Command.OK):
+            self.board.push(last_move)
+            self.last_move = None
+            self.__print_state()
+            print(f'Last move: {self.board.peek()}')
+        elif cmd.startswith(Command.NOK):
+            print(f'Rejected move: {self.last_move}')
+            self.last_move = None
+        elif cmd.startswith(Command.END):
+            reason = self.__get_cmd_params(cmd)
+            print(f'Game ended: {reason}')
+        elif cmd.startswith(Command.ERR):
+            error = self.__get_cmd_params(cmd)
+            print(f'Error: {error}')
+        elif cmd.startswith(Command.LAST_MOVE):
+            last_move = chess.Move.from_uci(self.__get_cmd_params(cmd))
+            print(f'Last move: {last_move}')
+        elif cmd.startswith(Command.CHECK):
+            check = chess.parse_square(self.__get_cmd_params(cmd))
+            print(f'Check: {chess.square_name(check)}')
+        elif cmd.startswith(Command.SIDE):
+            side = self.__get_cmd_params(cmd)
+            if side == Side.WHITE.value:
+                self.side = chess.WHITE
+            elif side == Side.BLACK.value:
+                self.side = chess.BLACK
+            elif side == Side.BOTH.value:
+                self.side = None
+        
+    def __on_text_provided(self, text: str):
+        if text.startswith(Command.MSG):
+            self.send(text)
+            async_input.ainput('', self.__on_text_provided)
+            return
+
+        move = self.__get_move(text)
+        if (move):
+            self.last_move = move
+            self.send(f'{Command.MOVE} {text}')
+            return
+        
+        print('Illegal input')
+
+    def __print_state(self):
+        print(self.board)
+        print(f'Turn: {self._color_to_str(self.board.turn)}')
+        if (self.side):
+            print("Your turn" if self.side == self.board.turn else "Opponent turn")
+
+    def __ask_user_to_move(self):
+        async_input.ainput('Provide move:\n', self.__on_text_provided)
+
+    @staticmethod
+    def __get_cmd_params(cmd: str):
+        return cmd.split(' ', 1)[1]
+
+    @staticmethod
+    def __get_move(move: str):
+        try:
+            return chess.Move.from_uci(move)
+        except ValueError:
+            return None
+        
+    def __send_ack(self, ack: bool):
+        self.send(Command.OK if ack else Command.NOK)
