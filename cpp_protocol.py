@@ -24,7 +24,7 @@ class CppProtocol(BaseProtocol):
     def on_cmd(self, cmd: str):
         if cmd.startswith(Command.FEATURE):
             feature = self.__get_cmd_params(cmd)
-            self.__send_ack(feature in [Feature.LAST_MOVE, Feature.CHECK, Feature.SIDE])
+            self.__send_ack(feature in [Feature.MSG, Feature.LAST_MOVE, Feature.CHECK, Feature.SIDE])
         elif cmd.startswith(Command.VARIANT):
             variant = self.__get_cmd_params(cmd)
             self.__send_ack(variant in [Variant.STANDARD, Variant.CHESS_960])
@@ -60,7 +60,7 @@ class CppProtocol(BaseProtocol):
             self.last_move = None
         elif cmd.startswith(Command.END):
             reason = self.__get_cmd_params(cmd)
-            print(f'Game ended: {reason}')
+            print(f'Round ended: {reason}')
         elif cmd.startswith(Command.ERR):
             error = self.__get_cmd_params(cmd)
             print(f'Error: {error}')
