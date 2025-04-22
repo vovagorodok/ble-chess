@@ -18,7 +18,7 @@ class CppProtocol(BaseProtocol):
     def __init__(self, send_callback: typing.Callable):
         super().__init__(send_callback)
         self.board = chess.Board()
-        self.last_move = None
+        self.console_move = None
         self.side = None
 
     def on_cmd(self, cmd: str):
@@ -47,17 +47,14 @@ class CppProtocol(BaseProtocol):
         elif cmd.startswith(Command.PROMOTE):
             move = chess.Move.from_uci(self.__get_cmd_params(cmd))
             self.board.push(move)
-            self.last_move = None
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
         elif cmd.startswith(Command.OK):
-            self.board.push(last_move)
-            self.last_move = None
+            self.board.push(self.console_move)
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
         elif cmd.startswith(Command.NOK):
-            print(f'Rejected move: {self.last_move}')
-            self.last_move = None
+            print(f'Rejected move: {self.console_move}')
         elif cmd.startswith(Command.END):
             reason = self.__get_cmd_params(cmd)
             print(f'Round ended: {reason}')
@@ -65,8 +62,8 @@ class CppProtocol(BaseProtocol):
             error = self.__get_cmd_params(cmd)
             print(f'Error: {error}')
         elif cmd.startswith(Command.LAST_MOVE):
-            last_move = chess.Move.from_uci(self.__get_cmd_params(cmd))
-            print(f'Last move: {last_move}')
+            move = chess.Move.from_uci(self.__get_cmd_params(cmd))
+            print(f'Last move: {move}')
         elif cmd.startswith(Command.CHECK):
             check = chess.parse_square(self.__get_cmd_params(cmd))
             print(f'Check: {chess.square_name(check)}')
@@ -88,7 +85,7 @@ class CppProtocol(BaseProtocol):
 
         move = self.__get_move(text)
         if (move):
-            self.last_move = move
+            self.console_move = move
             self.send(f'{Command.MOVE} {text}')
             return
         
