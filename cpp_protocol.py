@@ -85,9 +85,10 @@ class CppProtocol(BaseProtocol):
                 self.side = None
         
     def _on_text_provided(self, text: str):
+        async_input.ainput('', self._on_text_provided)
+
         if text.startswith(Command.MSG):
             self.send(text)
-            # async_input.ainput('', self.__on_text_provided)
             return
 
         move = self.__get_move(text)
@@ -97,7 +98,6 @@ class CppProtocol(BaseProtocol):
             return
         
         print('Illegal input')
-        # async_input.ainput('', self.__on_text_provided)
 
     def __print_state(self):
         print(self.board)
