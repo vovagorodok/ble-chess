@@ -39,30 +39,30 @@ class CppProtocol(BaseProtocol):
             self.board.set_fen(fen)
             self.send(f'{Command.SYNC} {fen}')
             self.__print_state()
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.MOVE):
             move = chess.Move.from_uci(self.__get_cmd_params(cmd))
             self.board.push(move)
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.PROMOTE):
             move = chess.Move.from_uci(self.__get_cmd_params(cmd))
             self.board.push(move)
             self.last_move = None
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.OK):
             self.board.push(last_move)
             self.last_move = None
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.NOK):
             print(f'Rejected move: {self.last_move}')
             self.last_move = None
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.END):
             reason = self.__get_cmd_params(cmd)
             print(f'Game ended: {reason}')
@@ -84,10 +84,10 @@ class CppProtocol(BaseProtocol):
             elif side == Side.BOTH:
                 self.side = None
         
-    def __on_text_provided(self, text: str):
+    def _on_text_provided(self, text: str):
         if text.startswith(Command.MSG):
             self.send(text)
-            async_input.ainput('', self.__on_text_provided)
+            # async_input.ainput('', self.__on_text_provided)
             return
 
         move = self.__get_move(text)
@@ -97,7 +97,7 @@ class CppProtocol(BaseProtocol):
             return
         
         print('Illegal input')
-        async_input.ainput('', self.__on_text_provided)
+        # async_input.ainput('', self.__on_text_provided)
 
     def __print_state(self):
         print(self.board)

@@ -27,13 +27,16 @@ class BaseProtocol(Protocol):
         self._send_clb = send_callback
 
     def start(self):
-        pass
+        async_input.ainput('', self._on_text_provided)
 
     def stop(self):
         async_input.cancel()
 
     def send(self, cmd: str):
         self._send_clb(cmd)
+
+    def _on_text_provided(self, text: str):
+        pass
 
     @staticmethod
     def _color_to_str(color):
