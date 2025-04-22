@@ -28,6 +28,7 @@ class BaseProtocol(Protocol):
 
     def start(self):
         async_input.ainput('', self._on_text_provided)
+        async_input.ainput('', self._on_text_provided)
 
     def stop(self):
         async_input.cancel()
