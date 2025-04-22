@@ -13,22 +13,28 @@ def main():
 
     device = chess_device.ChessDevice()
     protocol = cpp_protocol.CppProtocol(device.send)
-    service_uuid = cpp_protocol.SERVICE_UUID
-    tx_uuid = cpp_protocol.TX_UUID
-    rx_uuid = cpp_protocol.RX_UUID
 
     device.set_protocol(protocol)
     chess_peripheral = peripheral.Peripheral(__get_adapter_adress(),
                                              local_name='Chess board')
-    chess_peripheral.add_service(srv_id=1, uuid=service_uuid, primary=True)
+    chess_peripheral.add_service(
+        srv_id=1,
+        uuid=cpp_protocol.SERVICE_UUID,
+        primary=True)
     chess_peripheral.add_characteristic(
-        srv_id=1, chr_id=1, uuid=tx_uuid,
-        value=[], notifying=False,
+        srv_id=1,
+        chr_id=1,
+        uuid=cpp_protocol.TX_UUID,
+        value=[],
+        notifying=False,
         flags=['write'],
         write_callback=device.on_data_recived)
     chess_peripheral.add_characteristic(
-        srv_id=1, chr_id=2, uuid=rx_uuid,
-        value=[], notifying=False,
+        srv_id=1,
+        chr_id=2,
+        uuid=cpp_protocol.RX_UUID,
+        value=[],
+        notifying=False,
         flags=['read', 'notify'],
         notify_callback=device.on_change_notify)
 
