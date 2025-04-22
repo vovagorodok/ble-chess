@@ -57,7 +57,7 @@ class CppProtocol(BaseProtocol):
             print(f'Rejected move: {self.console_move}')
         elif cmd.startswith(Command.END):
             reason = self.__get_cmd_params(cmd)
-            print(f'Round ended: {reason}')
+            print(f'End: {reason}')
         elif cmd.startswith(Command.ERR):
             error = self.__get_cmd_params(cmd)
             print(f'Error: {error}')
