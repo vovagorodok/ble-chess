@@ -1,4 +1,3 @@
-import argparse
 import logging
 
 from bluezero import adapter
