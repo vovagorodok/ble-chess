@@ -9,7 +9,7 @@ import async_input
 class Protocol(abc.ABC):
 
     @abc.abstractmethod
-    def handle_cmd(self, cmd: str):
+    def on_cmd(self, cmd: str):
         pass
 
     @abc.abstractmethod

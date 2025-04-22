@@ -21,7 +21,7 @@ class CppProtocol(BaseProtocol):
         self.last_move = None
         self.side = None
 
-    def handle_cmd(self, cmd: str):
+    def on_cmd(self, cmd: str):
         if cmd.startswith(Command.FEATURE):
             feature = self.__get_cmd_params(cmd)
             self.__send_ack(feature in [Feature.LAST_MOVE, Feature.CHECK, Feature.SIDE])
@@ -39,30 +39,25 @@ class CppProtocol(BaseProtocol):
             self.board.set_fen(fen)
             self.send(f'{Command.SYNC} {fen}')
             self.__print_state()
-            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.MOVE):
             move = chess.Move.from_uci(self.__get_cmd_params(cmd))
             self.board.push(move)
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.PROMOTE):
             move = chess.Move.from_uci(self.__get_cmd_params(cmd))
             self.board.push(move)
             self.last_move = None
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.OK):
             self.board.push(last_move)
             self.last_move = None
             self.__print_state()
             print(f'Last move: {self.board.peek()}')
-            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.NOK):
             print(f'Rejected move: {self.last_move}')
             self.last_move = None
-            # async_input.ainput('', self.__on_text_provided)
         elif cmd.startswith(Command.END):
             reason = self.__get_cmd_params(cmd)
             print(f'Game ended: {reason}')
@@ -104,9 +99,6 @@ class CppProtocol(BaseProtocol):
         print(f'Turn: {self._color_to_str(self.board.turn)}')
         if (self.side):
             print("Your turn" if self.side == self.board.turn else "Opponent turn")
-
-    def __ask_user_to_move(self):
-        async_input.ainput('Provide move:\n', self.__on_text_provided)
 
     @staticmethod
     def __get_cmd_params(cmd: str):

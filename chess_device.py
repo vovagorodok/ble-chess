@@ -36,4 +36,4 @@ class ChessDevice:
     def on_data_recived(self, value, options):
         cmd = bytes(value).decode('utf-8')
         logging.debug(f'Recieved: {cmd}')
-        self._protocol.handle_cmd(cmd)
+        self._protocol.on_cmd(cmd)
