@@ -76,7 +76,7 @@ class CppProtocol(BaseProtocol):
                 self.side = chess.BLACK
             elif side == Side.BOTH:
                 self.side = None
-            print(f'Side: {side}')
+            print(f'Side: {self.side}')
         
     def _on_text_provided(self, text: str):
         async_input.ainput('', self._on_text_provided)
