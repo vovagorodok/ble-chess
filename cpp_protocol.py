@@ -76,7 +76,6 @@ class CppProtocol(BaseProtocol):
                 self.side = chess.BLACK
             elif side == Side.BOTH:
                 self.side = None
-            print(f'Side: {chess.COLOR_NAMES[self.side]}')
         
     def _on_text_provided(self, text: str):
         async_input.ainput('', self._on_text_provided)
@@ -96,7 +95,7 @@ class CppProtocol(BaseProtocol):
     def __print_state(self):
         print(self.board)
         print(f'Turn: {self._color_to_str(self.board.turn)}')
-        if (self.side):
+        if (self.side is not None):
             print('Your turn' if self.side == self.board.turn else 'Opponent turn')
 
     @staticmethod
