@@ -34,6 +34,7 @@ class CppProtocol(BaseProtocol):
                 self.board.chess960 = False
             elif variant == Variant.CHESS_960:
                 self.board.chess960 = True
+            print(f'Variant: {variant}')
         elif cmd.startswith(Command.BEGIN):
             fen = self.__get_cmd_params(cmd)
             self.board.set_fen(fen)
