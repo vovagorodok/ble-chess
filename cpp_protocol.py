@@ -95,7 +95,7 @@ class CppProtocol(BaseProtocol):
         print(self.board)
         print(f'Turn: {self._color_to_str(self.board.turn)}')
         if (self.side):
-            print("Your turn" if self.side == self.board.turn else "Opponent turn")
+            print('Your turn' if self.side == self.board.turn else 'Opponent turn')
 
     @staticmethod
     def __get_cmd_params(cmd: str):

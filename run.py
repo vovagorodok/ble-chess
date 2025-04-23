@@ -47,5 +47,5 @@ def __get_adapter_adress():
     return list(adapter.Adapter.available())[0].address
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

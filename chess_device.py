@@ -21,10 +21,10 @@ class ChessDevice:
 
     @staticmethod
     def on_connect(ble_device: device.Device):
-        logging.info(f"Connected to {ble_device.address}")
+        logging.info(f'Connected to {ble_device.address}')
 
     def on_disconnect(self, adapter_address, device_address):
-        logging.info(f"Disconnected from {device_address}")
+        logging.info(f'Disconnected from {device_address}')
         self._protocol.stop()
 
     def on_change_notify(self, notifying, characteristic):
