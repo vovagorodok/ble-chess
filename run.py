@@ -12,10 +12,12 @@ def main():
 
     device = chess_device.ChessDevice()
     protocol = cpp_protocol.CppProtocol(device.send)
-
     device.set_protocol(protocol)
-    chess_peripheral = peripheral.Peripheral(__get_adapter_adress(),
-                                             local_name='Chess board')
+
+    chess_peripheral = peripheral.Peripheral(
+        __get_adapter_adress(),
+        local_name='Chess board')
+
     chess_peripheral.add_service(
         srv_id=1,
         uuid=cpp_protocol.SERVICE_UUID,
