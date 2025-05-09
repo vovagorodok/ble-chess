@@ -26,6 +26,7 @@ PERIPHERAL_COMMANDS = (
     Commands.MSG,
     Commands.RESIGN)
 
+
 class CppProtocol(BaseProtocol):
 
     def __init__(self, send_callback: typing.Callable):
