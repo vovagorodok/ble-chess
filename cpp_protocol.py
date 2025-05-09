@@ -12,6 +12,19 @@ SERVICE_UUID = 'f5351050-b2c9-11ec-a0c0-b3bc53b08d33'
 TX_UUID = 'f53513ca-b2c9-11ec-a0c1-639b8957db99'
 RX_UUID = 'f535147e-b2c9-11ec-a0c2-8bbd706ec4e6'
 
+SUPPORTED_FEATURES = [
+    Features.MSG,
+    Features.LAST_MOVE,
+    Features.CHECK,
+    Features.SIDE,
+    Features.RESIGN]
+SUPPORTED_VARIANTS = [
+    Variants.STANDARD,
+    Variants.CHESS_960]
+PERIPHERAL_COMMANDS = (
+    Commands.MOVE,
+    Commands.MSG,
+    Commands.RESIGN)
 
 class CppProtocol(BaseProtocol):
 
@@ -24,10 +37,10 @@ class CppProtocol(BaseProtocol):
     def on_cmd(self, cmd: str):
         if cmd.startswith(Commands.FEATURE):
             feature = self.__get_cmd_params(cmd)
-            self.__send_ack(feature in [Features.MSG, Features.LAST_MOVE, Features.CHECK, Features.SIDE])
+            self.__send_ack(feature in SUPPORTED_FEATURES)
         elif cmd.startswith(Commands.VARIANT):
             variant = self.__get_cmd_params(cmd)
-            self.__send_ack(variant in [Variants.STANDARD, Variants.CHESS_960])
+            self.__send_ack(variant in SUPPORTED_VARIANTS)
         elif cmd.startswith(Commands.SET_VARIANT):
             variant = self.__get_cmd_params(cmd)
             if variant == Variants.STANDARD:
@@ -80,7 +93,7 @@ class CppProtocol(BaseProtocol):
     def _on_text_provided(self, text: str):
         async_input.ainput('', self._on_text_provided)
 
-        if text.startswith(Commands.MSG):
+        if text.startswith(PERIPHERAL_COMMANDS):
             self.send(text)
             return
 
